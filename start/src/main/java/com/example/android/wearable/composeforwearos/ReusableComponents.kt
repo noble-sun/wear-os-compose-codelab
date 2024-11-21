@@ -15,21 +15,39 @@
  */
 package com.example.android.wearable.composeforwearos
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Message
+import androidx.compose.material.icons.rounded.Phone
+import androidx.compose.material.icons.rounded.SelfImprovement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.AppCard
+import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
+import androidx.wear.compose.material.Chip
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.Switch
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.ToggleChip
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import com.example.android.wearable.composeforwearos.theme.WearAppTheme
 
@@ -39,13 +57,42 @@ import com.example.android.wearable.composeforwearos.theme.WearAppTheme
 @Composable
 fun ButtonExample(
     modifier: Modifier = Modifier,
-    iconModifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier
 ) {
+    // Creates a row to center a composable item
+    Row(
+        modifier = modifier,
+        // This is like a property in css or react to center the contents of the row
+        horizontalArrangement = Arrangement.Center
+    ) {
+        // Inside the row, a button is added
+        Button(
+            modifier = Modifier.size(ButtonDefaults.LargeButtonSize),
+            onClick = {},
+        ){
+            // Inside the button, add an icon
+            Icon(
+                imageVector = Icons.Rounded.Phone,
+                contentDescription = "Triggers phone action",
+                modifier = iconModifier
+            )
+        }
+    }
 }
 
 // TODO: Create a Text Composable
 @Composable
 fun TextExample(modifier: Modifier = Modifier) {
+    Text(
+        modifier = modifier,
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colors.primary,
+        /* No idea where does this R comes from, but device_shape is the name of a xml tag that
+           has the string as the content of the tag.
+           The xml file is located at res/values/strings/round/strings.xml
+        */
+        text = stringResource(R.string.device_shape)
+    )
 }
 
 // TODO: Create a Card (specifically, an AppCard) Composable
@@ -54,6 +101,23 @@ fun CardExample(
     modifier: Modifier = Modifier,
     iconModifier: Modifier = Modifier,
 ) {
+    // Creates a card composable
+    AppCard(
+        modifier = modifier,
+        appImage = {
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.Message,
+                contentDescription = "Triggers open message action",
+                modifier = iconModifier
+            )
+        },
+        appName = { Text("Messages" )},
+        time = { Text("12m")},
+        title = { Text("Kim Green")},
+        onClick = {}
+    ){
+        Text("On my way!")
+    }
 }
 
 // TODO: Create a Chip Composable
@@ -62,11 +126,52 @@ fun ChipExample(
     modifier: Modifier = Modifier,
     iconModifier: Modifier = Modifier,
 ) {
+    Chip(
+        modifier = modifier,
+        onClick = { },
+        label = {
+            Text(
+                text = "5 minutes Meditation",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Rounded.SelfImprovement,
+                contentDescription = "Triggers meditation action",
+                modifier = iconModifier
+            )
+        }
+    )
 }
 
 // TODO: Create a ToggleChip Composable
 @Composable
 fun ToggleChipExample(modifier: Modifier = Modifier) {
+    var checked by remember { mutableStateOf(true)}
+    ToggleChip(
+        modifier = modifier,
+        checked = checked,
+        toggleControl = {
+            Switch(
+                checked = checked,
+                modifier = Modifier.semantics {
+                    this.contentDescription = if (checked) "On" else "Off"
+                }
+            )
+        },
+        onCheckedChange = {
+            checked = it
+        },
+        label = {
+            Text(
+                text = "Sound",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    )
 }
 
 // Function only used as a demo for when you start the code lab (removed as step 1).
